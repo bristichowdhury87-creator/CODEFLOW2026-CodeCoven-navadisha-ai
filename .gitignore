@@ -3,4 +3,8 @@ documents/
 __pycache__/
 *.pyc
 .env
+<<<<<<< HEAD
+legal_db/
+=======
 database.py
+>>>>>>> 60f8c87806c3099bf9aa7dfda29f0f679942df3f
