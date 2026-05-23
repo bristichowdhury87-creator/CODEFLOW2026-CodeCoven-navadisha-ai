@@ -38,9 +38,8 @@ FREE HELP AVAILABLE:
 REMEMBER:
 [One encouraging sentence in sinple words]
 
-If the user wrote in bengali, respond in bengali.
-if the user wrote in hindi, respond in hindi.
-Otherwise respond in simple English.
+If the user wrote in bengali, ENTIRE RESPONSE MUST BE in bengali.
+if the user wrote in hindi, ENTIRE RESPONSE MUST BE in hindi.
 Always mix in simple Bengali or Hindi words to make it more relatable, even if the user wrote in English.
 No legal terms. No complicated sentences.
 Indian rural people should be able to understand and act on your advice without needing a lawyer.
@@ -67,7 +66,7 @@ def build_chain():
     retrievers=[dense_retriever, bm25_retriever],
     weights=[0.5, 0.5]
     )
-    llm=Ollama(model="gemma2:2b")
+    llm=Ollama(model="llama3.1")
     prompt = ChatPromptTemplate.from_messages([
         ("system", PROMPT_TEMPLATE),
         ("human", "{input}"),

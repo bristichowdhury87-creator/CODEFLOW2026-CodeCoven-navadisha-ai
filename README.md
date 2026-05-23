@@ -35,7 +35,7 @@ Tier 2 - Pillar 1 (Web Platform) + Pillar 3 (Local AI Model)
 |----------|----------------------|---------------------|
 |Frontend  |HTML, CSS, JavaScript |User Interface       |
 |Backend   |Python, Flask         |Web Framework        |
-|AI Model  |Gemma 2B by Google    |Legal Intelligence   |
+|AI Model  |Llama 3.1 8B by Meta  |Legal Intelligence   |
 |AI Runtime|Ollama(Local)         |Offline AI Deployment|
 |Database  |MySQL                 |Query Logging        |
 |Voice     |Web Speech            |Voice Input          |
@@ -59,7 +59,7 @@ Tier 2 - Pillar 1 (Web Platform) + Pillar 3 (Local AI Model)
 |      Member    |                Role               |
 |----------------|-----------------------------------|
 |Bristi Chowdhury|Backend & AI Integration           |
-|Adrika sarkar   |Frontend Templates(HTML,CSS,JS)    |
+|Adrika Sarkar   |Frontend Templates(HTML,CSS,JS)    |
 |Moupiya Aich    |RAG Pipeline, database & Legal Data|
 
 ## How to Run
