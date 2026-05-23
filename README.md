@@ -56,11 +56,11 @@ Tier 2 - Pillar 1 (Web Platform) + Pillar 3 (Local AI Model)
 --> Case history page
 
 ## Team
-|      Member    |           Role          |
-|----------------|-------------------------|
-|Bristi Chowdhury|Frontend & Database      |
-|Adrika sarkar   |Backend & AI Integration |
-|Moupiya Aich    |Documentation & Testing  |
+|      Member    |                Role               |
+|----------------|-----------------------------------|
+|Bristi Chowdhury|Backend & AI Integration           |
+|Adrika sarkar   |Frontend Templates(HTML,CSS,JS)    |
+|Moupiya Aich    |RAG Pipeline, database & Legal Data|
 
 ## How to Run
 bash
