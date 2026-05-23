@@ -1,5 +1,6 @@
 legal_db/
-database.py
+documents/
 __pycache__/
 *.pyc
 .env
+database.py
