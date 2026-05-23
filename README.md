@@ -59,7 +59,7 @@ Tier 2 - Pillar 1 (Web Platform) + Pillar 3 (Local AI Model)
 |      Member    |                Role               |
 |----------------|-----------------------------------|
 |Bristi Chowdhury|Backend & AI Integration           |
-|Adrika sarkar   |Frontend Templates(HTML,CSS,JS)    |
+|Adrika Sarkar   |Frontend Templates(HTML,CSS,JS)    |
 |Moupiya Aich    |RAG Pipeline, database & Legal Data|
 
 ## How to Run
