@@ -1,35 +1,25 @@
 from flask import Flask, render_template, request
-import ollama
 import mysql.connector
 from datetime import datetime
+from rag import build_chain, ask_question
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
 
+# Load RAG chain once on startup
+print("Loading RAG pipeline...")
+chain = build_chain()
+print("RAG ready!")
+
 db_config = {
-    'host':'localhost',
-    'user':'root',
-    'password':'',
-    'database':'navadisha'
+    'host': 'localhost',
+    'user': 'root',
+    'password': 'navadisha123',
+    'database': 'navadisha'
 }
-
-def get_ai_help(user_problem):
-    prompt = f"""
-    You are NavaDisha AI, an expert legal aid assistant for rural India. 
-    Analyze this user crisis: "{user_problem}"
-    Provide a quick solution in this EXACT format:
-    PROMPT ANALYSIS: Match this to UN SDG Goal 16 explaining impact on justice access.
-    YOUR LEGAL RIGHTS: State 1 specific legal right or constitutional framework.
-    GOVERNMENT SCHEMES & ACTION STEPS: 
-    - Mention 1 relevant statutory scheme (NALSA/SALSA/etc).
-    - Give 1 immediate next step they must take today.
-    Keep response under 5 sentences. India context only.
-    """
-    try:
-        response = ollama.generate(model='gemma2:2b', prompt=prompt, options={"num_predict": 120, "temperature": 0.3})
-        return response['response']
-    except Exception as e:
-        return "Legal aid services are currently busy. Please contact your nearest NALSA legal clinic for urgent assistance."
-
 
 @app.route("/")
 def home():
@@ -37,9 +27,12 @@ def home():
 
 @app.route("/get-help", methods=["POST"])
 def get_help():
-    user_problem = request.form.get("problem") 
-    ai_response = get_ai_help(user_problem)
+    user_problem = request.form.get("problem")
     
+    # Use RAG pipeline instead of direct Ollama call
+    result = ask_question(chain, user_problem)
+    ai_response = result["answer"]
+
     try:
         conn = mysql.connector.connect(**db_config)
         cursor = conn.cursor()
@@ -49,8 +42,8 @@ def get_help():
         conn.commit()
         conn.close()
     except Exception as db_err:
-        print(f" [Database skipped]: {db_err}")
-        
+        print(f"[Database skipped]: {db_err}")
+
     return render_template("result.html", problem=user_problem, response=ai_response)
 
 if __name__ == "__main__":
