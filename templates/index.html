@@ -141,6 +141,10 @@
             margin-bottom: 10px;
             font-weight: bold;
         }
+
+
+
+
         #loading-overlay {
             display: none; 
             position: fixed; 
@@ -153,6 +157,7 @@
             align-items: center;
             text-align: center;
         }
+
     </style>
 </head>
 <body>
@@ -257,8 +262,16 @@
         const selectedLang = document.getElementById('selected-lang');
         const langIndicator = document.getElementById('lang-indicator');
 
+       
+        document.onscroll = resetTimer;
+
+
         
         document.onscroll = resetTimer;
+
+        // Update language when dropdown changes manually
+
+
         langSelect.addEventListener('change', () => {
             if (langSelect.value === 'bn-IN') {
                 selectedLang.value = 'Bengali';
