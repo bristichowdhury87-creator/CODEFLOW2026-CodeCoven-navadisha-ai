@@ -1,7 +1,10 @@
 from flask import Flask, render_template, request
+from flask import session
 from database import save_to_db
 from rag import build_chain, ask_question
 from dotenv import load_dotenv
+from database import save_to_db, db_config
+import mysql.connector
 import os
 
 load_dotenv()
@@ -26,7 +29,10 @@ LEGAL_KEYWORDS = [
     'medicine', 'treatment', 'pregnant', 'child', 'labour',
     'forced', 'bonded', 'slave', 'discriminat', 'untouchab',
     'forest', 'crop', 'farm', 'farmer', 'insurance', 'denied',
-    'refused', 'illegal', 'injustice', 'justice', 'court',
+    'refused', 'illegal', 'injustice', 'justice', 'court', 
+    'rti', 'application', 'information', 'government', 'official',
+    'document', 'record', 'file', 'apply', 'scheme', 'benefit',
+    'rights', 'entitle', 'welfare', 'compensation', 'relief',
     'fir', 'complaint', 'custody', 'bail', 'jail', 'prison',
 
     # Bengali
@@ -59,6 +65,30 @@ INVALID_RESPONSES = {
     "Hindi": "मैं केवल ग्रामीण भारत की कानूनी समस्याओं में मदद कर सकता हूं। कृपया अपनी कानूनी समस्या बताएं।",
     "English": "I can only help with legal problems faced by rural Indians. Please describe your legal issue."
 }
+
+CATEGORY_KEYWORDS = {
+    "Domestic Violence": ["beat", "hit", "abuse", "violence", "मार", "হিংসা", "মারধর"],
+    "Land Dispute": ["land", "farm", "crop", "forest", "जमीन", "জমি", "ফসল"],
+    "Wage Theft": ["salary", "wage", "mgnrega", "मजदूरी", "বেতন", "মজুরি"],
+    "Caste Discrimination": ["caste", "untouchab", "discriminat", "जाति", "জাতি"],
+    "Police/Legal": ["fir", "arrest", "police", "jail", "custody", "bail", "पुलिस", "পুলিশ"],
+    "Housing": ["evict", "house", "homeless", "बेदखल", "উচ্ছেদ"],
+    "Health": ["hospital", "doctor", "medicine", "sick", "pregnant", "अस्पताल", "হাসপাতাল"],
+    "Food Security": ["ration", "hungry", "starving", "food", "राशन", "রেশন"],
+    "Corruption": ["bribe", "corrupt", "रिश्वत", "ঘুষ"],
+    "Education": ["school", "education", "scholarship", "स्कूल", "স্কুল"],
+    "Financial": ["pension", "loan", "insurance", "पेंशन", "পেনশন"],
+    "Dowry/Marriage": ["dowry", "दहेज", "যৌতুক"],
+    "Financial": ["pension", "loan", "insurance", "पेंशन", "পেনশন", "moneylender", "interest", "debt", "borrow", "repay", "chit"],
+    "Threat/Intimidation": ["threat", "threaten", "intimidat", "extort", "blackmail", "हुमकि", "धमकी", "হুমকি"],
+}
+
+def detect_category(problem):
+    problem_lower = problem.lower()
+    for category, keywords in CATEGORY_KEYWORDS.items():
+        if any(k in problem_lower for k in keywords):
+            return category
+    return "General"
 
 def is_valid_query(problem):
     problem_lower = problem.lower()
@@ -95,11 +125,34 @@ def get_help():
 
     citations = "\n\n".join([doc.page_content
                             for doc in result.get("context", [])])
-    save_to_db(user_problem, ai_response, citations)
+    category = detect_category(user_problem)
+    region = request.form.get("region", "Not Selected")
+    save_to_db(user_problem, ai_response, citations, language, region, category)
 
     return render_template("result.html",
                            problem=user_problem,
                            response=ai_response)
+
+@app.route("/dashboard")
+def dashboard():
+    conn = mysql.connector.connect(**db_config)
+    cursor = conn.cursor(dictionary=True)
+    
+    cursor.execute("""
+        SELECT region, legal_category, COUNT(*) as count 
+        FROM queries_navadisha 
+        GROUP BY region, legal_category 
+        ORDER BY count DESC
+    """)
+    data = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return render_template("dashboard.html", data=data)
+# --- Add this route to your app.py ---
+
+@app.route("/session-ended")
+def session_ended():
+    return render_template("session_ended.html")
     
 if __name__ == "__main__":
     app.run(debug=True)
