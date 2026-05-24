@@ -151,8 +151,17 @@
             </div>
             
             <div id="status-message">Listening... Speak now / বলুন...</div>
+            
+            <div style="text-align:center; margin-bottom:15px;">
+                <select id="lang-select" style="padding:8px 12px; border-radius:8px; border:1px solid #cbd5e1; font-size:14px; color:#1e293b; background:#fff; cursor:pointer;">
+                    <option value="bn-IN">🇧🇩 বাংলা (Bengali)</option>
+                    <option value="hi-IN">🇮🇳 हिंदी (Hindi)</option>
+                    <option value="en-IN" selected>🇬🇧 English</option>
+                </select>
+            </div>
 
             <form action="/get-help" method="POST">
+                <input type="hidden" id="selected-lang" name="language" value="English">
                 <div class="textarea-container">
                     <textarea id="problem-input" name="problem" placeholder="এখানে আপনার সমস্যাটি বলুন বা লিখুন... / यहाँ अपनी समस्या बोलें या लिखें... / Describe your legal dispute here..."></textarea>
                     <button type="button" id="mic-toggle" class="mic-btn" title="Speak your issue">🎤</button>
@@ -167,18 +176,25 @@
         const micBtn = document.getElementById('mic-toggle');
         const problemInput = document.getElementById('problem-input');
         const statusMsg = document.getElementById('status-message');
+        const langSelect = document.getElementById('lang-select');
+        const selectedLang = document.getElementById('selected-lang');
 
+        langSelect.addEventListener('change', () => {
+            if (langSelect.value === 'bn-IN') selectedLang.value = 'Bengali';
+            else if (langSelect.value === 'hi-IN') selectedLang.value = 'Hindi';
+            else selectedLang.value = 'English';
+        });
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        
+    
         if (SpeechRecognition) {
             const recognition = new SpeechRecognition();
             recognition.continuous = false;
             recognition.interimResults = false;
-            recognition.lang = 'en-IN'; 
 
             let isListening = false;
 
             micBtn.addEventListener('click', () => {
+                recognition.lang = langSelect ? langSelect.value : 'en-IN';
                 if (!isListening) {
                     recognition.start();
                 } else {
@@ -194,7 +210,13 @@
             };
 
             recognition.onresult = (event) => {
-                const speechToText = event.results[0][0].transcript;
+                let speechToText = event.results[0][0].transcript;
+                // Capitalize first letter
+                speechToText = speechToText.charAt(0).toUpperCase() + speechToText.slice(1);
+                // Add period at end if no punctuation
+                if (!/[।.?!]$/.test(speechToText)) {
+                    speechToText += '.';
+                }
                 problemInput.value = speechToText;
             };
 
@@ -212,6 +234,14 @@
         } else {
             micBtn.style.display = 'none';
         }
+
+        // Enter key submits form
+        problemInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                document.querySelector('button[type="submit"]').click();
+            }
+        });
     </script>
-</body>
-</html>
+    </body>
+    </html>
