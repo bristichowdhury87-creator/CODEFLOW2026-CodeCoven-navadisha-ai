@@ -100,6 +100,6 @@ def get_help():
     return render_template("result.html",
                            problem=user_problem,
                            response=ai_response)
-
+    
 if __name__ == "__main__":
     app.run(debug=True)
