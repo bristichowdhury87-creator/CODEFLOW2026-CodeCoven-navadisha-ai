@@ -211,14 +211,31 @@
 
             recognition.onresult = (event) => {
                 let speechToText = event.results[0][0].transcript;
+    
                 // Capitalize first letter
                 speechToText = speechToText.charAt(0).toUpperCase() + speechToText.slice(1);
-                // Add period at end if no punctuation
-                if (!/[।.?!]$/.test(speechToText)) {
-                    speechToText += '.';
+    
+                // Add correct punctuation based on language
+                if (langSelect.value === 'bn-IN') {
+                    // Bengali full stop
+                    if (!/[।?!]$/.test(speechToText)) {
+                        speechToText += '।';
+                    }
+                } else if (langSelect.value === 'hi-IN') {
+                    // Hindi full stop
+                    if (!/[।?!]$/.test(speechToText)) {
+                        speechToText += '।';
+                    }
+                } else {
+                    // English full stop
+                    if (!/[.?!]$/.test(speechToText)) {
+                        speechToText += '.';
                 }
-                problemInput.value = speechToText;
-            };
+        }
+    
+        problemInput.value = speechToText;
+    };
+
 
             recognition.onerror = (event) => {
                 console.error("Speech Recognition Error: ", event.error);
@@ -242,6 +259,25 @@
                 document.querySelector('button[type="submit"]').click();
             }
         });
+        // Auto-detect language when user types or pastes
+        problemInput.addEventListener('input', function() {
+            const text = problemInput.value;
+    
+            // Check for Bengali unicode range
+            const bengaliPattern = /[\u0980-\u09FF]/;
+            // Check for Hindi/Devanagari unicode range  
+            const hindiPattern = /[\u0900-\u097F]/;
+    
+        if (bengaliPattern.test(text)) {
+            langSelect.value = 'bn-IN';
+            selectedLang.value = 'Bengali';
+        } else if (hindiPattern.test(text)) {
+            langSelect.value = 'hi-IN';
+            selectedLang.value = 'Hindi';
+        } else {
+            langSelect.value = 'en-IN';
+            selectedLang.value = 'English';
+        }});
     </script>
     </body>
     </html>
