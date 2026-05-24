@@ -35,14 +35,14 @@ Tier 2 - Pillar 1 (Web Platform) + Pillar 3 (Local AI Model)
 |----------|----------------------|---------------------|
 |Frontend  |HTML, CSS, JavaScript |User Interface       |
 |Backend   |Python, Flask         |Web Framework        |
-|AI Model  |Llama 3.1 8B by Meta  |Legal Intelligence   |
+|AI Model  |Llama 3.2 3b by Meta  |Legal Intelligence   |
 |AI Runtime|Ollama(Local)         |Offline AI Deployment|
 |Database  |MySQL                 |Query Logging        |
 |Voice     |Web Speech            |Voice Input          |
 
 ## Features Completed - Push 1
 --> Flask backend running and responding
---> Local Gemma 2B AI connected via Ollama
+--> Local Llama 3.2 3B AI connected via Ollama with Hybrid RAG pipeline
 --> Homepage with legal problem input form
 --> Voice input in Bengali, Hindi and English
 --> Result page with structured AI legal advice
@@ -64,13 +64,14 @@ Tier 2 - Pillar 1 (Web Platform) + Pillar 3 (Local AI Model)
 
 ## How to Run
 bash
-pip install flask ollama
-mysql-connector-python
-python-docx
-ollama pull gemma2:2b
+pip install flask ollama mysql-connector-python python-docx langchain langchain-community chromadb sentence-transformers pypdf rank_bm25 python-dotenv
+ollama pull llama3.2
+python ingest.py
 python app.py
 
 Open browser --> http://127.0.0.1:5000
+
+Note: Llama 3.2 3B runs completely locally on CPU. Response time is 2-5 minutes — intentional for offline rural deployment with no internet dependency.
 
 ## Impact
 -->40M+ pending legal cases in India
