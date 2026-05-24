@@ -3,5 +3,3 @@ documents/
 __pycache__/
 *.pyc
 .env
-setup_translation.py
-legal_db/
