@@ -42,7 +42,7 @@ Tier 2 - Pillar 1 (Web Platform) + Pillar 3 (Local AI Model)
 
 ## Features Completed - Push 1
 --> Flask backend running and responding
---> Local Gemma 2B AI connected via Ollama
+--> Local Llama 3.2 3B AI connected via Ollama with Hybrid RAG pipeline
 --> Homepage with legal problem input form
 --> Voice input in Bengali, Hindi and English
 --> Result page with structured AI legal advice
