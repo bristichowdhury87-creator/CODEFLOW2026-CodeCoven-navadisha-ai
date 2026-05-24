@@ -35,7 +35,7 @@ Tier 2 - Pillar 1 (Web Platform) + Pillar 3 (Local AI Model)
 |----------|----------------------|---------------------|
 |Frontend  |HTML, CSS, JavaScript |User Interface       |
 |Backend   |Python, Flask         |Web Framework        |
-|AI Model  |Llama 3.1 8B by Meta  |Legal Intelligence   |
+|AI Model  |Llama 3.2 3B by Meta  |Legal Intelligence   |
 |AI Runtime|Ollama(Local)         |Offline AI Deployment|
 |Database  |MySQL                 |Query Logging        |
 |Voice     |Web Speech            |Voice Input          |
