@@ -135,5 +135,3 @@ Access at → http://127.0.0.1:5000/dashboard
 ## Privacy
 
 AI runs locally — user data never leaves the device. No external API calls. Complete data privacy guaranteed.
-
-AI runs locally — user data never leaves the device. No external API calls. Complete data privacy guaranteed.data privacy guaranteed.
