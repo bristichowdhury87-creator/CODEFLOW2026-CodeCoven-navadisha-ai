@@ -188,6 +188,21 @@
     </div>
 
     <script>
+        //7 minutes in milliseconds: 7 * 60 * 1000 = 300000
+        let inactivityTimer;
+
+        function resetTimer() {
+            clearTimeout(inactivityTimer);
+            inactivityTimer = setTimeout(() => {
+                window.location.href = "/session-ended";
+            }, 420000); 
+        }
+        window.onload = resetTimer;
+        document.onmousemove = resetTimer;
+        document.onkeypress = resetTimer;
+        document.onclick = resetTimer;
+        document.onscroll = resetTimer;
+
         const micBtn = document.getElementById('mic-toggle');
         const problemText = document.getElementById('problem-text');
         const statusMsg = document.getElementById('status-message');
