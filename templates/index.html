@@ -241,8 +241,7 @@
         });
 
         let inactivityTimer;
-
-        // 5 minutes in milliseconds: 5 * 60 * 1000 = 300000
+        
         function resetTimer() {
             clearTimeout(inactivityTimer);
             inactivityTimer = setTimeout(() => {
@@ -264,12 +263,8 @@
 
        
         document.onscroll = resetTimer;
-
-
-        
+ 
         document.onscroll = resetTimer;
-
-        // Update language when dropdown changes manually
 
 
         langSelect.addEventListener('change', () => {
@@ -285,7 +280,6 @@
             }
         });
 
-        // Speech Recognition
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
         if (SpeechRecognition) {
@@ -375,7 +369,6 @@
             micBtn.style.display = 'none';
         }
 
-        // Enter key submits form
         problemInput.addEventListener('keydown', function(e) {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
@@ -383,7 +376,6 @@
             }
         });
 
-        // Auto detect language when user types
         problemInput.addEventListener('input', function() {
             const text = problemInput.value;
             const bengaliPattern = /[\u0980-\u09FF]/;
