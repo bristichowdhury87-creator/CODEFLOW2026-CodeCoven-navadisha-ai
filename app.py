@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request
 import mysql.connector
 from datetime import datetime
+
 from rag import build_chain, ask_question
 import os
 from dotenv import load_dotenv
@@ -28,10 +29,12 @@ def home():
 @app.route("/get-help", methods=["POST"])
 def get_help():
     user_problem = request.form.get("problem")
-    
-    # Use RAG pipeline instead of direct Ollama call
-    result = ask_question(chain, user_problem)
-    ai_response = result["answer"]
+    language = request.form.get("language", "English")
+    result = ask_question(chain, user_problem, language)
+    ai_response = result["answer"] if isinstance(result["answer"], str) else str(result["answer"])
+    import re
+    ai_response = re.sub(r'\*\*(.*?)\*\*', r'\1', ai_response)
+    ai_response = re.sub(r'\*(.*?)\*', r'\1', ai_response)
 
     try:
         conn = mysql.connector.connect(**db_config)
