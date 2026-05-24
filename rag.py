@@ -201,9 +201,11 @@ def build_chain():
     return rag_chain
 
 def ask_question(chain, question, language="English"):
+    augmented_input = f"[RESPOND ONLY IN {language.upper()}]\n\n{question}"
+    
     result = chain.invoke({
-        "input": question,
-        "language": language
+        "input": augmented_input,
+        "language": language,
     })
 
     if isinstance(result, dict):
