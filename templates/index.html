@@ -211,32 +211,35 @@
 
             recognition.onresult = (event) => {
                 let speechToText = event.results[0][0].transcript;
-    
-                // Capitalize first letter
                 speechToText = speechToText.charAt(0).toUpperCase() + speechToText.slice(1);
-    
-                // Add correct punctuation based on language
-                if (langSelect.value === 'bn-IN') {
-                    // Bengali full stop
-                    if (!/[।?!]$/.test(speechToText)) {
-                        speechToText += '।';
+                const sentenceBreaks = [' what ', ' how ', ' why ', ' where ', ' when ', ' who ', ' which ', ' can ', ' could ', ' should ', ' would '];
+                for (const word of sentenceBreaks) {
+                    if (speechToText.toLowerCase().includes(word)) {
+                        const idx = speechToText.toLowerCase().indexOf(word);
+                        speechToText = speechToText.slice(0, idx) + '. ' + speechToText.slice(idx + 1, idx + 2).toUpperCase() + speechToText.slice(idx + 2);
+                        break;
                     }
-                } else if (langSelect.value === 'hi-IN') {
-                    // Hindi full stop
-                    if (!/[।?!]$/.test(speechToText)) {
-                        speechToText += '।';
-                    }
-                } else {
-                    // English full stop
-                    if (!/[.?!]$/.test(speechToText)) {
-                        speechToText += '.';
                 }
-        }
+    
+    
+                if (langSelect.value === 'bn-IN') {
+                    const questionWords = ['কি', 'কী', 'কেন', 'কোথায়', 'কখন', 'কিভাবে', 'কার'];
+                    const hasQuestion = questionWords.some(w => speechToText.includes(w));
+                    if (!/[।?!]$/.test(speechToText)) speechToText += hasQuestion ? '?' : '।';
+                } else if (langSelect.value === 'hi-IN') {
+                    const questionWords = ['क्या', 'कैसे', 'क्यों', 'कहाँ', 'कब', 'कौन', 'कितना'];
+                    const hasQuestion = questionWords.some(w => speechToText.includes(w));
+                    if (!/[।?!]$/.test(speechToText)) speechToText += hasQuestion ? '?' : '।';
+                } else {
+                    const questionWords = ['what', 'how', 'why', 'when', 'where', 'who', 'which', 'can', 'could', 'should', 'would', 'is', 'are', 'do', 'does', 'did'];
+                    const firstWord = speechToText.trim().split(' ')[0].toLowerCase();
+                    if (!/[.?!]$/.test(speechToText)) {
+                        speechToText += questionWords.includes(firstWord) ? '?' : '.';
+                    }
+            }
     
         problemInput.value = speechToText;
     };
-
-
             recognition.onerror = (event) => {
                 console.error("Speech Recognition Error: ", event.error);
                 statusMsg.innerText = "Error capturing voice. Try typing instead!";
